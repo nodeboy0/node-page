@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Archivo a MongoDB</title>
+</head>
+<body>
+    <form enctype="multipart/form-data">
+        <input type="file" name="fileInput" id="fileInput">
+        <button type="button" onclick="uploadFile()">Cargar Archivo</button>
+        <button type="button" onclick="executeUpload()">Subir Archivo</button>
+    </form>
+
+    <script>
+        let file;
+
+        // Función para manejar la selección de archivos
+        function uploadFile() {
+            const input = document.getElementById('fileInput');
+            file = input.files[0];
+            console.log('Archivo seleccionado:', file.name);
+        }
+
+        // Función para manejar la subida del archivo
+        function executeUpload() {
+            if (!file) {
+                alert('Por favor selecciona un archivo primero.');
+                return;
+            }
+
+            // Crear una instancia de FormData para enviar el archivo al servidor
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Enviar el archivo al servidor utilizando Fetch API
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+                alert('Archivo subido exitosamente.');
+            })
+            .catch(error => {
+                console.error('Error al subir el archivo:', error);
+                alert('Ocurrió un error al subir el archivo.');
+            });
+        }
+    </script>
+</body>
+</html>
